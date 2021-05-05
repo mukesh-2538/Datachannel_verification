@@ -181,9 +181,17 @@ $('#viewer .send-message').click(async () => {
     }
     else if(viewerLocalMessage.value == "GET_FILE")
     {
-        var json_payload_viewer={"sessionId":"9768f233-d524-4bfd-b75e-dbdee36f0c66",
+        var json_payload_viewer={
+            "sessionId":"9768f233-d524-4bfd-b75e-dbdee36f0c66",
         "action": "GET_FILE",
         "payload": { "url" : "http://localhost:5000/segment01.ts"}
+        };
+    }
+
+    else if(viewerLocalMessage.value == "STOP")
+    {
+        var json_payload_viewer={
+            "message":"stopfeed"
         };
     }
     sendViewerMessage(JSON.stringify(json_payload_viewer));
