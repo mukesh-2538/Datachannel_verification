@@ -1,4 +1,5 @@
 let ROLE = null; // Possible values: 'master', 'viewer', null
+let viewerResolution = 'a=rid:1 recv max-width=160;max-height=120';
 
 function configureLogging() {
     function log(level, messages) {
@@ -195,6 +196,16 @@ $('#viewer .send-message').click(async () => {
         };
     }
     sendViewerMessage(JSON.stringify(json_payload_viewer));
+});
+
+$('#viewer .change-resolution').click(async()=>{
+    const formValues = getFormValues();
+    if (viewerResolution === 'a=rid:1 recv max-width=160;max-height=120'){
+        viewerResolution = 'a=rid:1 recv max-width=1920;max-height=1920';
+      }else {
+        viewerResolution = 'a=rid:1 recv max-width=160;max-height=120';
+      }
+      await changeresolution(formValues,viewerResolution);
 });
 
 // Read/Write all of the fields to/from localStorage so that fields are not lost on refresh.

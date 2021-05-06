@@ -2,6 +2,7 @@
  * This file demonstrates the process of starting WebRTC streaming using a KVS Signaling Channel.
  */
 
+
 function addVideoParamsToDescription(offer, ...params){
     let sdp = offer.sdp;
     const arr = sdp.split('\n');
@@ -156,6 +157,7 @@ async function startViewer(localView, remoteView, formValues, onStatsReport, onR
         if (formValues.useTrickleICE) {
             console.log('[VIEWER] Sending SDP offer');
             const desc = addVideoParamsToDescription(viewer.peerConnection.localDescription,'a=rid:1 recv max-width=160;max-height=120');
+
             //viewer.signalingClient.sendSdpOffer(viewer.peerConnection.localDescription);
             viewer.signalingClient.sendSdpOffer(desc);
             console.log("offer :",desc);
@@ -267,4 +269,34 @@ function sendViewerMessage(message) {
             console.error('[VIEWER] Send DataChannel: ', e.toString());
         }
     }
+}
+
+
+
+
+
+
+
+
+
+
+
+async function changeresolution(formValues, resolution) {
+    console.log('[VIEWER] Creating SDP offer');
+    await viewer.peerConnection.setLocalDescription(
+        await viewer.peerConnection.createOffer({
+            offerToReceiveAudio: true,
+            offerToReceiveVideo: true,
+        }),
+    );
+
+    // When trickle ICE is enabled, send the offer now and then send ICE candidates as they are generated. Otherwise wait on the ICE candidates.
+    if (formValues.useTrickleICE) {
+        console.log('[VIEWER] Sending SDP offer');
+        const desc = addVideoParamsToDescription(viewer.peerConnection.localDescription,resolution);
+        //viewer.signalingClient.sendSdpOffer(viewer.peerConnection.localDescription);
+        viewer.signalingClient.sendSdpOffer(desc);
+        console.log("offer :",desc);
+    }
+    console.log('[VIEWER] Generating ICE candidates');
 }
