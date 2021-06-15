@@ -1,5 +1,6 @@
 let ROLE = null; // Possible values: 'master', 'viewer', null
 let viewerResolution = 'a=rid:1 recv max-width=160;max-height=120';
+let startTimestamp = 1623657098;
 
 function configureLogging() {
     function log(level, messages) {
@@ -148,6 +149,9 @@ $('#viewer-button').click(async () => {
     startViewer(localView, remoteView, formValues, onStatsReport, event => {
         remoteMessage.append(`${event.data}\n`);
         remoteMessage.append(`----------------------------------------------\n`);
+        console.log("Received datachannel message");
+        console.log(`${event.data}\n`);
+        console.log(event.data.byteLength);
     });
 });
 
@@ -173,8 +177,8 @@ $('#viewer .send-message').click(async () => {
             "action": "GET_PLAYLIST",
             "payload": { 
                 "streamType":"PLAYBACK",
-                "startTime" : "2021-03-31T09:19:33+0000",
-                "endTime" : "2021-03-31T10:19:33+0000",
+                "startTime" : "2021-06-14T07:51:39Z",
+                "endTime" : "2021-06-14T07:56:23Z",
                 "maximumNumberOfSegments" :100
             }
         };
@@ -182,11 +186,13 @@ $('#viewer .send-message').click(async () => {
     }
     else if(viewerLocalMessage.value == "GET_FILE")
     {
+        console.log("Received GET_FILE", startTimestamp);
         var json_payload_viewer={
             "sessionId":"9768f233-d524-4bfd-b75e-dbdee36f0c66",
         "action": "GET_FILE",
-        "payload": { "url" : "http://localhost:5000/segment01.ts"}
+        "payload": { "url" : `http://localhost:5000/mnt/mmc1/H264/640x480/1623628800/1623654000/${startTimestamp}.ts`}
         };
+        startTimestamp = startTimestamp + 10;
     }
 
     else if(viewerLocalMessage.value == "STOP")
@@ -200,10 +206,10 @@ $('#viewer .send-message').click(async () => {
 
 $('#viewer .change-resolution').click(async()=>{
     const formValues = getFormValues();
-    if (viewerResolution === 'a=rid:1 recv max-width=160;max-height=120'){
-        viewerResolution = 'a=rid:1 recv max-width=1920;max-height=1920';
+    if (viewerResolution === 'a=rid:1 recv max-width=160;max-height=120' || viewerResolution === 'a=rid:1 recv max-width=1280;max-height=720'){
+        viewerResolution = 'a=rid:1 recv max-width=1920;max-height=1080';
       }else {
-        viewerResolution = 'a=rid:1 recv max-width=160;max-height=120';
+        viewerResolution = 'a=rid:1 recv max-width=1280;max-height=720';
       }
       await changeresolution(formValues,viewerResolution);
 });
