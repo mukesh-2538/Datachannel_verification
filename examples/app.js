@@ -1,6 +1,6 @@
 let ROLE = null; // Possible values: 'master', 'viewer', null
 let viewerResolution = 'a=rid:1 recv max-width=160;max-height=120';
-let startTimestamp = 1623657098;
+let startTimestamp = 1623997614;
 
 function configureLogging() {
     function log(level, messages) {
@@ -147,11 +147,11 @@ $('#viewer-button').click(async () => {
     toggleDataChannelElements();
 
     startViewer(localView, remoteView, formValues, onStatsReport, event => {
+        //var datatext = parseInt(event.data, 2).toString();
+        //console.log(String.fromCharCode.apply(null, new Uint16Array(event.data)));
+        //console.log("Incoming datachannel message ", datatext);
         remoteMessage.append(`${event.data}\n`);
         remoteMessage.append(`----------------------------------------------\n`);
-        console.log("Received datachannel message");
-        console.log(`${event.data}\n`);
-        console.log(event.data.byteLength);
     });
 });
 
@@ -177,8 +177,8 @@ $('#viewer .send-message').click(async () => {
             "action": "GET_PLAYLIST",
             "payload": { 
                 "streamType":"PLAYBACK",
-                "startTime" : "2021-06-14T07:51:39Z",
-                "endTime" : "2021-06-14T07:56:23Z",
+                "startTime" : "2021-06-18T06:26:54Z",
+                "endTime" : "2021-06-18T06:28:04Z",
                 "maximumNumberOfSegments" :100
             }
         };
@@ -190,10 +190,49 @@ $('#viewer .send-message').click(async () => {
         var json_payload_viewer={
             "sessionId":"9768f233-d524-4bfd-b75e-dbdee36f0c66",
         "action": "GET_FILE",
-        "payload": { "url" : `http://localhost:5000/mnt/mmc1/H264/640x480/1623628800/1623654000/${startTimestamp}.ts`}
+        "payload": { "url" : `http://localhost:5000/mnt/mmc1/H264/640x480/1623974400/1623992400/${startTimestamp}.ts`}
         };
         startTimestamp = startTimestamp + 10;
     }
+    else if(viewerLocalMessage.value == "GET_FILE_LOW")
+    {
+        console.log("GET_FILE_LOW");
+        var json_payload_viewer={
+            "sessionId":"9768f233-d524-4bfd-b75e-dbdee36f0c66",
+        "action": "GET_FILE",
+        "payload": { "url" : `http://localhost:5000/tmp/lkj/index_low.m3u8`}
+        };
+    }
+    else if(viewerLocalMessage.value == "GET_FILE_HIGH")
+    {
+        console.log("GET_FILE_HIGH");
+        var json_payload_viewer={
+            "sessionId":"9768f233-d524-4bfd-b75e-dbdee36f0c66",
+        "action": "GET_FILE",
+        "payload": { "url" : `http://localhost:5000/tmp/lkj/index_high.m3u8`}
+        };
+    }
+    else if(viewerLocalMessage.value == "GET_FILE_META_INDEX")
+    {
+        console.log("GET_FILE_META_INDEX");
+        var json_payload_viewer={
+            "sessionId":"9768f233-d524-4bfd-b75e-dbdee36f0c66",
+        "action": "GET_FILE",
+        "payload": { "url" : `http://localhost:5000/tmp/lkj/metadata.index`}
+        };
+    }
+    else if(viewerLocalMessage.value == "GET_FILE_META")
+    {
+        console.log("GET_FILE_META");
+        var json_payload_viewer={
+            "sessionId":"9768f233-d524-4bfd-b75e-dbdee36f0c66",
+        "action": "GET_FILE",
+        "payload": { "url" : `http://localhost:5000/mnt/mmc1/metadata/1623974400/1623996000/${startTimestamp}.json`}
+       
+        };
+        startTimestamp = startTimestamp + 10;
+    }
+    
 
     else if(viewerLocalMessage.value == "STOP")
     {
